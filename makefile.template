@@ -1,0 +1,18 @@
+# these are things you need to change
+THINGNAME := <name>
+WIFI	  := <ssid>
+PASSWORD  := <password>
+SECURITY  := eWiFiSecurityWPA2
+#SECURITY  := eWiFiSecurityOpen
+#SECURITY  := eWiFiSecurityWEP
+#SECURITY  := eWiFiSecurityWPA
+PORT      := /dev/ttyUSB0 # typical for linux, but you should verify
+
+#
+# these should be fairly constant, if you put things where Espressif installs them
+#
+ESPBASE	  := ${HOME}/esp
+FREERTOS  := ${ESPBASE}/amazon-freertos
+CONFIG    := ${FREERTOS}/tools/aws_config_quick_start/configure.json
+CONFFILE  := configure.json
+
