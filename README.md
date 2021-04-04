@@ -35,6 +35,10 @@ You *must* change the THINGNAME, WIFI and PASSWORD values.  Most WiFi uses eWiFi
 This tool expects that your edits will end up in 'makefile.local' and there is a .gitignore rule to ensure that you don't accidentally check in your wifi details into git.  Don't count on this.  Be aware of what you are doing.  You have been warned.  
 
 
+## Build Script
+
+The 'builder' script that gets copied into the FreeRTOS directory gets around the problem of correctly setting environment variables in a Make sub-shell. That is something I thought I had solved, but alas, no.  But this simple hack makes it work.
+
 ## Location
 
 Just to keep things easy I've decided to work in my default 'esp' folder, but you can put this anywhere and it should still work.
@@ -49,7 +53,6 @@ make git	# git clone FreeRTOS
 make install	# run the Espressif install script - must be done once
 make config     # creates the config file and runs the config script for AWS IoT
 make build      # builds all the cmake files
-make compile    # compiles the binary
 make erase 	# erases the ESP32
 make flash	# copies the binary to the ESP32
 make monitor	# opens a serial port - use 'ctrl-]' to exit

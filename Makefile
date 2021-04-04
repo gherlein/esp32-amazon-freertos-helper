@@ -3,7 +3,7 @@ include makefile.local
 # initial learnings: https://blog.alikhalil.tech/2019/06/getting-started-with-amazon-freertos-and-the-espressif-esp32-devkitc/
 # key learning about -GNinja: https://github.com/aws/amazon-freertos/issues/2957
 
-all: git install config build compile erase flash monitor
+all: git install build erase flash monitor
 
 git: 
 	cd ${ESPBASE};git clone git@github.com:aws/amazon-freertos.git --recurse-submodules
@@ -22,27 +22,24 @@ config: ${CONFFILE}.orig
 	cat ${CONFIG}
 	cd ${FREERTOS}/tools/aws_config_quick_start;python SetupAWS.py setup
 
-build: 
-	cd ${FREERTOS}; . vendors/espressif/esp-idf/export.sh;cmake -DVENDOR=espressif -DBOARD=esp32_wrover_kit -DCOMPILER=xtensa-esp32 -S . -B build -GNinja
-
-compile:
-	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;./vendors/espressif/esp-idf/tools/idf.py -p ${PORT} build
+build:
+	cp ./builder ${FREERTOS};cd ${FREERTOS};bash ./builder
 
 erase:
-	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;./vendors/espressif/esp-idf/tools/idf.py -p ${PORT} erase_flash
+	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;idf.py -p ${PORT} erase_flash
 
 flash:
-	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;./vendors/espressif/esp-idf/tools/idf.py -p ${PORT} flash
+	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;idf.py -p ${PORT} flash
 
 monitor:
-	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;./vendors/espressif/esp-idf/tools/idf.py -p ${PORT} monitor
+	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;idf.py -p ${PORT} monitor
 
 clean:
-	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;./vendors/espressif/esp-idf/tools/idf.py clean
+	cd ${FREERTOS};. vendors/espressif/esp-idf/export.sh;idf.py clean
 
 
 fullclean: clean localclean
-	cd ${FREERTOS}; . vendors/espressif/esp-idf/export.sh;./vendors/espressif/esp-idf/tools/idf.py fullclean
+	cd ${FREERTOS}; . vendors/espressif/esp-idf/export.sh;idf.py fullclean
 	aws iot delete-thing --thing-name "${THINGNAME}"
 	aws iot delete-policy --policy-name ${THINGNAME}_amazon_freertos_policy
 
